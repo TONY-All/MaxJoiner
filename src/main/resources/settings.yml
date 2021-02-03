@@ -1,0 +1,67 @@
+# MaxJoiner
+# author: TONY_All
+
+lang:
+  - "en_US"
+  - "zh_CN"
+update_delay: 500
+timeout: 500
+
+icons:
+  joinable:
+    name: "§a%name%"
+    type: "WOOL"
+    damage: 5
+    lore: |-
+      §aCurrent Player: %player%
+      §eStatus:
+      %motd%
+
+      §e§lClick to join
+    shiny: false
+  spectateble:
+    name: "§6%name%"
+    type: "WOOL"
+    damage: 1
+    lore: |-
+      §aCurrent Player: %player%
+      §eStatus:
+      %motd%
+
+      §e§lClick to spectate
+    shiny: false
+  unjoinable:
+    name: "§c%name%"
+    type: "WOOL"
+    damage: 14
+    lore: |-
+      §aCurrent Player: %player%
+      §eStatus:
+      %motd%
+    shiny: false
+  closed:
+    name: "§c%name%"
+    type: "OBSIDIAN"
+    damage: 0
+    lore: |-
+      §cIn Maintenance
+    shiny: false
+
+  show_all:
+    name: "§6Show All"
+    type: "EYE_OF_ENDER"
+    damage: 0
+    lore: ""
+    shiny: false
+  fast_join:
+    name: "§aQuick join"
+    type: "REDSTONE_TORCH_ON"
+    damage: 0
+    lore: ""
+    shiny: false
+  back:
+    name: "§eBack"
+    type: "BED"
+    damage: 0
+    lore: ""
+    shiny: false

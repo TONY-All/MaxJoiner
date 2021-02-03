@@ -1,0 +1,13 @@
+
+
+#         Powered by TabooLib 5.0         #
+
+
+name: ${name}
+main: ${main}
+version: ${version}
+authors: ['TONY_All']
+
+lib-download: true
+lib-version: ${libVersion}
+api-version: 1.13

@@ -1,0 +1,25 @@
+categories:
+  # Category full name
+  core:
+    # Category display name
+    name: "Example Server"
+    # which MOTD server can join
+    # regex supported
+    joinable:
+      - |-
+          State: [1-2]
+          Map: .*
+    # which MOTD server can join
+    # regex supported
+    # empty means server can't spectate
+    spectatable:
+      - |-
+          State: [3-5]
+          Map: .*
+    servers:
+      # server name in bungeecord
+      s1:
+        # server's ip
+        ip: "127.0.0.1:25566"
+        # server's display name
+        name: "Server1"
