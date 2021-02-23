@@ -3,17 +3,23 @@ package cn.maxmc.maxjoiner
 import cn.maxmc.maxjoiner.server.Server
 import cn.maxmc.maxjoiner.server.ServerInfo
 import com.google.common.io.ByteStreams
+import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.google.gson.stream.JsonReader
+import io.izzel.taboolib.module.locale.TLocale
+import io.izzel.taboolib.module.locale.logger.TLoggerManager
+import io.izzel.taboolib.util.chat.ComponentSerializer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import net.md_5.bungee.api.chat.ComponentBuilder
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
 import java.io.*
+import java.lang.IllegalStateException
 import java.net.InetSocketAddress
 import java.net.Socket
 import java.nio.charset.StandardCharsets
@@ -67,11 +73,26 @@ suspend fun ping(url: String, port: Int): ServerInfo {
             }
         }
 
-        val jsonObject = JsonParser().parse(result).asJsonObject
-        val online = jsonObject.get("players").asJsonObject.get("online").asInt
-        val max = jsonObject.get("players").asJsonObject.get("max").asInt
-        val description = jsonObject.get("description").asString
-        ServerInfo(true,online,max,description)
+        try {
+            val jsonObject = JsonParser().parse(result).asJsonObject
+            val online = jsonObject.get("players").asJsonObject.get("online").asInt
+            val max = jsonObject.get("players").asJsonObject.get("max").asInt
+            val description = jsonObject.get("description").let {
+                if(it is JsonObject) {
+                    val parse = ComponentSerializer.parse(it.toString())
+                    val ret = StringBuffer()
+                    parse.forEach { comp ->
+                        ret.append(comp.toLegacyText())
+                    }
+                    return@let ret.toString()
+                }
+                it.asString
+            }
+            ServerInfo(true,online,max,description)
+        }catch (e: Throwable) {
+            TLoggerManager.getLogger(MaxJoiner.plugin).error("Error while parse Json Object: \n $result")
+            ServerInfo(false,0,0,"")
+        }
     }
 }
 
@@ -97,6 +118,7 @@ private fun readVarInt(`in`: DataInputStream): Int {
 
 private fun writeVarInt(out: DataOutputStream, paramInt: Int) {
     var temp = paramInt
+    val str: String = "a"
     while (temp and -128 != 0) {
         out.write(temp and 127 or 128)
         temp = temp ushr 7

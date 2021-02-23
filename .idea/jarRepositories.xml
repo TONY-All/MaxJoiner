@@ -61,5 +61,15 @@
       <option name="name" value="maven4" />
       <option name="url" value="http://repo.ptms.ink/repository/maven-releases/" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven3" />
+      <option name="name" value="maven3" />
+      <option name="url" value="https://packages.aliyun.com/maven/repository/2076536-snapshot-Wxumrm/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven2" />
+      <option name="name" value="maven2" />
+      <option name="url" value="https://packages.aliyun.com/maven/repository/2076536-release-0lwAQS/" />
+    </remote-repository>
   </component>
 </project>

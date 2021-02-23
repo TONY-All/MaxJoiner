@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'cn.maxmc.maxjoiner'
-version '1.0.0'
+version '1.1.1'
 
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
@@ -20,7 +20,6 @@ repositories {
         name = "Minecraft-Mixed Repo"
         url = "http://lss233.littleservice.cn/repositories/minecraft/"
     }
-
     maven {
         name = "Aliyun Repo"
         url = 'https://maven.aliyun.com/repository/public/'

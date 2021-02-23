@@ -7,9 +7,10 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.bukkit.Bukkit
 import org.bukkit.configuration.ConfigurationSection
+import java.util.concurrent.CopyOnWriteArrayList
 
 object ServerManager {
-    private val categories = ArrayList<ServerCategory>()
+    val categories = CopyOnWriteArrayList<ServerCategory>()
     private val index = HashMap<String, ServerCategory>()
 
     fun loadCategories() {
@@ -32,8 +33,8 @@ object ServerManager {
         return ServerCategory(
             confSec.name,
             confSec.getStringColored("name"),
-            confSec.getStringList("joinable"),
-            confSec.getStringList("spectatable"),
+            CopyOnWriteArrayList(confSec.getStringList("joinable")),
+            CopyOnWriteArrayList(confSec.getStringList("spectatable")),
             servers
         )
     }

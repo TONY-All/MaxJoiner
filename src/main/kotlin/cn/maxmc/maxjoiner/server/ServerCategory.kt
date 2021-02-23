@@ -7,14 +7,26 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
+import java.util.concurrent.CopyOnWriteArrayList
 
 data class ServerCategory(
     val name: String,
     val displayName: String,
-    val joinable: List<String>,
-    val spectatable: List<String>,
-    val servers: ArrayList<Server> = ArrayList()
+    val joinable: CopyOnWriteArrayList<String>,
+    val spectatable: CopyOnWriteArrayList<String>,
 ) {
+    var servers: CopyOnWriteArrayList<Server> = CopyOnWriteArrayList()
+    private set
+    constructor(
+        name: String,
+        displayName: String,
+        joinable: CopyOnWriteArrayList<String>,
+        spectatable: CopyOnWriteArrayList<String>,
+        inputSer: List<Server>
+        ): this(name, displayName, joinable, spectatable) {
+            servers = CopyOnWriteArrayList(inputSer)
+    }
+
     companion object{
         val show = ItemBuilder(Material.valueOf(MaxJoiner.settings.getString("icons.show_all.type")))
             .name(MaxJoiner.settings.getStringColored("icons.show_all.name"))
@@ -48,6 +60,25 @@ data class ServerCategory(
     }
 
     val itemServerMap = HashMap<ItemStack,Server>()
+
+    val maxPlayer: Int
+    get() {
+        var players = 0
+        servers.forEach {
+            players += it.currentState.max
+
+        }
+        return players
+    }
+
+    val currentPlayer: Int
+    get() {
+            var players = 0
+            servers.forEach {
+                players += it.currentState.current
+            }
+            return players
+        }
 
     private val slots = listOf(
         10,11,12,13,14,15,16,
