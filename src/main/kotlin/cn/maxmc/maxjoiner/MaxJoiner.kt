@@ -1,32 +1,36 @@
 package cn.maxmc.maxjoiner
 
-import io.izzel.taboolib.loader.Plugin
-import io.izzel.taboolib.module.config.TConfig
-import io.izzel.taboolib.module.dependency.TDependency
-import io.izzel.taboolib.module.inject.TInject
 import org.bukkit.Bukkit
-import org.bukkit.Material
-import org.bukkit.scheduler.BukkitTask
+import taboolib.common.env.RuntimeDependency
+import taboolib.common.platform.Plugin
+import taboolib.module.configuration.Config
+import taboolib.module.configuration.Configuration
+import taboolib.platform.BukkitPlugin
 import java.util.*
 
+@RuntimeDependency(
+    "!org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.1",
+    test = "kotlinx.coroutines.Job",
+    transitive = false,
+    relocate = ["!kotlin.", "!kotlin@kotlin_version_escape@."]
+)
 object MaxJoiner: Plugin() {
-    @TInject("settings.yml",locale = "lang")
-    lateinit var settings: TConfig
+    @Config("settings.yml", autoReload = true)
+    lateinit var settings: Configuration
 
-    @TInject("servers.yml")
-    lateinit var servers: TConfig
+    @Config("servers.yml")
+    lateinit var servers: Configuration
 
     private val timer = Timer("Server Query")
 
     override fun onEnable() {
-        Bukkit.getServer().messenger.registerOutgoingPluginChannel(this.plugin, "BungeeCord")
-        TDependency.requestLib("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2",TDependency.MAVEN_REPO,"")
+        Bukkit.getServer().messenger.registerOutgoingPluginChannel(BukkitPlugin.getInstance(), "BungeeCord")
         timer.schedule(object : TimerTask() {
             override fun run() {
                 ServerManager.updatePing()
             }
         },0L, settings.getLong("update_delay"))
-        servers.listener {
+        servers.onReload {
             ServerManager.loadCategories()
         }
     }

@@ -5,29 +5,22 @@ import cn.maxmc.maxjoiner.server.ServerInfo
 import com.google.common.io.ByteStreams
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import com.google.gson.stream.JsonReader
-import io.izzel.taboolib.module.locale.TLocale
-import io.izzel.taboolib.module.locale.logger.TLoggerManager
-import io.izzel.taboolib.util.chat.ComponentSerializer
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import net.md_5.bungee.api.chat.ComponentBuilder
-import net.md_5.bungee.api.chat.TextComponent
+import kotlinx.coroutines.*
+import net.md_5.bungee.chat.ComponentSerializer
 import org.bukkit.configuration.ConfigurationSection
-import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
-import java.io.*
-import java.lang.IllegalStateException
+import taboolib.platform.BukkitPlugin
+import java.io.ByteArrayOutputStream
+import java.io.DataInputStream
+import java.io.DataOutputStream
+import java.io.IOException
 import java.net.InetSocketAddress
 import java.net.Socket
 import java.nio.charset.StandardCharsets
-import javax.imageio.ImageIO
 import kotlin.experimental.and
 
 val timeout: Int
-get() = MaxJoiner.settings.getInt("timeout")
+    get() = MaxJoiner.settings.getInt("timeout")
 
 @Suppress("BlockingMethodInNonBlockingContext")
 suspend fun ping(url: String, port: Int): ServerInfo {
@@ -36,7 +29,7 @@ suspend fun ping(url: String, port: Int): ServerInfo {
         try {
             socket.connect(InetSocketAddress(url, port), timeout)
         } catch (e: Exception) {
-            return@withContext ServerInfo(false,0,0,"")
+            return@withContext ServerInfo(false, 0, 0, "")
         }
         val inputStream = socket.getInputStream()
         val dataInputStream = DataInputStream(inputStream)
@@ -78,7 +71,7 @@ suspend fun ping(url: String, port: Int): ServerInfo {
             val online = jsonObject.get("players").asJsonObject.get("online").asInt
             val max = jsonObject.get("players").asJsonObject.get("max").asInt
             val description = jsonObject.get("description").let {
-                if(it is JsonObject) {
+                if (it is JsonObject) {
                     val parse = ComponentSerializer.parse(it.toString())
                     val ret = StringBuffer()
                     parse.forEach { comp ->
@@ -88,15 +81,15 @@ suspend fun ping(url: String, port: Int): ServerInfo {
                 }
                 it.asString
             }
-            ServerInfo(true,online,max,description)
-        }catch (e: Throwable) {
-            TLoggerManager.getLogger(MaxJoiner.plugin).error("Error while parse Json Object: \n $result")
-            ServerInfo(false,0,0,"")
+            ServerInfo(true, online, max, description)
+        } catch (e: Throwable) {
+            error("§c| §7Error while parse Json Object: \n $result")
+            ServerInfo(false, 0, 0, "")
         }
     }
 }
 
-private fun sendPacket(out: DataOutputStream,data: ByteArray) {
+private fun sendPacket(out: DataOutputStream, data: ByteArray) {
     writeVarInt(out, data.size)
     out.write(data)
     out.flush()
@@ -132,7 +125,7 @@ private fun writeString(out: DataOutputStream, string: String) {
 }
 
 fun ConfigurationSection.getStringColored(path: String): String {
-    return this.getString(path).replace('&','§')
+    return this.getString(path).replace('&', '§')
 }
 
 @Suppress("UnstableApiUsage")
@@ -143,5 +136,9 @@ fun Player.connect(server: Server) {
     out.writeUTF("Connect")
     out.writeUTF(server.bcName)
 
-    this.sendPluginMessage(MaxJoiner.plugin,"BungeeCord",out.toByteArray())
+    this.sendPluginMessage(BukkitPlugin.getInstance(), "BungeeCord", out.toByteArray())
 }
+
+val pluginScope = CoroutineScope(SupervisorJob() + CoroutineExceptionHandler { _, except ->
+    except.printStackTrace()
+})

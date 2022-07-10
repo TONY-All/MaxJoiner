@@ -1,7 +1,6 @@
-msg:
-  none_server: "§cNo server is currently available, please try again later."
-  null_category: "§cNo server of given type exists, please check and try again"
-  cant_join: "&cThis server is currently not available to join"
-  server_full: "&cThe server is full and cannot be joined"
-  list: "§eFollowing Categories:"
-  no_permission: "§cSorry, but you don't have permission to use that."
+none_server: "§cNo server is currently available, please try again later."
+null_category: "§cNo server of given type exists, please check and try again"
+cant_join: "&cThis server is currently not available to join"
+server_full: "&cThe server is full and cannot be joined"
+list: "§eFollowing Categories:"
+no_permission: "§cSorry, but you don't have permission to use that."

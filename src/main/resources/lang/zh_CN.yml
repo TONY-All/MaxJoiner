@@ -1,7 +1,6 @@
-msg:
-  none_server: "§c当前无可用服务器,请稍后重试."
-  null_category: "§c不存在该种类服务器,请检查后重试"
-  cant_join: "&c该服务器当前不可加入"
-  server_full: "&c该服务器已满人,不可加入"
-  list: "§e所有类型:"
-  no_permission: "§c抱歉,但您没有权限执行该指令"
+none_server: "§c当前无可用服务器,请稍后重试."
+null_category: "§c不存在该种类服务器,请检查后重试"
+cant_join: "&c该服务器当前不可加入"
+server_full: "&c该服务器已满人,不可加入"
+list: "§e所有类型:"
+no_permission: "§c抱歉,但您没有权限执行该指令"

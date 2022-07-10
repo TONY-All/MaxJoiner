@@ -6,7 +6,9 @@ import cn.maxmc.maxjoiner.server.ServerInfo
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.bukkit.Bukkit
-import org.bukkit.configuration.ConfigurationSection
+import taboolib.library.configuration.ConfigurationSection
+import taboolib.module.configuration.util.getStringColored
+import taboolib.platform.BukkitPlugin
 import java.util.concurrent.CopyOnWriteArrayList
 
 object ServerManager {
@@ -15,9 +17,9 @@ object ServerManager {
 
     fun loadCategories() {
         categories.clear()
-        val confSec = MaxJoiner.servers.getConfigurationSection("categories")
+        val confSec = MaxJoiner.servers.getConfigurationSection("categories")!!
         confSec.getKeys(false).forEach {
-            val category = loadCategory(confSec.getConfigurationSection(it))
+            val category = loadCategory(confSec.getConfigurationSection(it)!!)
             categories.add(category)
             index[category.name] = category
         }
@@ -25,14 +27,14 @@ object ServerManager {
 
     private fun loadCategory(confSec: ConfigurationSection): ServerCategory {
         val servers = ArrayList<Server>()
-        confSec.getConfigurationSection("servers").getKeys(false).forEach {
-            val server = loadServer(confSec.getConfigurationSection("servers.$it"))
+        confSec.getConfigurationSection("servers")!!.getKeys(false).forEach {
+            val server = loadServer(confSec.getConfigurationSection("servers.$it")!!)
             servers.add(server)
         }
 
         return ServerCategory(
             confSec.name,
-            confSec.getStringColored("name"),
+            confSec.getStringColored("name")!!,
             CopyOnWriteArrayList(confSec.getStringList("joinable")),
             CopyOnWriteArrayList(confSec.getStringList("spectatable")),
             servers
@@ -40,13 +42,13 @@ object ServerManager {
     }
 
     private fun loadServer(confSec: ConfigurationSection): Server {
-        val url = confSec.getString("ip")
+        val url = confSec.getString("ip")!!
         val ip = url.substringBefore(":")
         val port = url.substringAfter(":").toInt()
 
         return Server(
             confSec.name,
-            confSec.getStringColored("name"),
+            confSec.getStringColored("name")!!,
             true,
             ip,
             port,
@@ -79,7 +81,7 @@ object ServerManager {
                     server.canSpectate = temp
                 }
             }
-            Bukkit.getScheduler().runTaskAsynchronously(MaxJoiner.plugin) {
+            Bukkit.getScheduler().runTaskAsynchronously(BukkitPlugin.getInstance()) {
                 it.sort()
                 it.updateGUI()
             }

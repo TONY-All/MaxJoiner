@@ -13,6 +13,8 @@ taboolib {
     install("common")
     install("common-5")
     install("platform-bukkit")
+    install("module-configuration")
+    install("module-lang")
     version = "6.0.9-25"
 //    options("skip-kotlin-relocate")
     description {
