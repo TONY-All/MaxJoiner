@@ -9,6 +9,7 @@ import kotlinx.coroutines.*
 import net.md_5.bungee.chat.ComponentSerializer
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.entity.Player
+import taboolib.common.platform.function.warning
 import taboolib.platform.BukkitPlugin
 import java.io.ByteArrayOutputStream
 import java.io.DataInputStream
@@ -83,7 +84,7 @@ suspend fun ping(url: String, port: Int): ServerInfo {
             }
             ServerInfo(true, online, max, description)
         } catch (e: Throwable) {
-            error("§c| §7Error while parse Json Object: \n $result")
+            warning("§c| §7Error while parse Json Object: \n $result")
             ServerInfo(false, 0, 0, "")
         }
     }
@@ -111,7 +112,6 @@ private fun readVarInt(`in`: DataInputStream): Int {
 
 private fun writeVarInt(out: DataOutputStream, paramInt: Int) {
     var temp = paramInt
-    val str: String = "a"
     while (temp and -128 != 0) {
         out.write(temp and 127 or 128)
         temp = temp ushr 7

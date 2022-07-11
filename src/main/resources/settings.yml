@@ -1,9 +1,5 @@
 # MaxJoiner
 # author: TONY_All
-
-lang:
-  - "en_US"
-  - "zh_CN"
 update_delay: 500
 timeout: 500
 

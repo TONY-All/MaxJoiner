@@ -1,83 +1,69 @@
 package cn.maxmc.maxjoiner
 
-import io.izzel.taboolib.module.command.base.*
-import io.izzel.taboolib.module.locale.TLocale
-import org.bukkit.command.Command
-import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import taboolib.common.platform.command.CommandBuilder
+import taboolib.common.platform.command.command
+import taboolib.platform.util.sendLang
 
-@BaseCommand(name = "maxJoiner",aliases = ["sj","serverjoiner","maxjoiner","maxjoin","queue","mj"])
-class MaxJoinerCommand: BaseMainCommand() {
+fun registerCommand() {
+    command("maxJoiner", aliases = listOf("serverJoiner", "sj", "mj")) {
+        commandQuick()
+        commandGUI()
+        commandList()
+    }
+}
 
-    @SubCommand(permission = "maxjoiner.quick",requiredPlayer = true,arguments = ["category"], description = "quick join a category")
-    val quick = object : BaseSubCommand() {
-        override fun getArguments(): Array<Argument> {
-            return arrayOf(Argument("category",true, CommandTab {
-                return@CommandTab ServerManager.categories.map { it.name }
-            }))
+fun CommandBuilder.CommandBase.commandQuick() = literal("quick", permission = "maxjoiner.quick") {
+    dynamic {
+        suggestion<Player> { _, _ ->
+            ServerManager.categories.map { it.name }
         }
 
-        override fun onCommand(sender: CommandSender, cmd: Command, lab: String, args: Array<out String>) {
-            sender as Player
+        execute<Player> { sender, _, arg ->
+            val category = ServerManager.getCategoryByName(arg)
 
-            val categoryName = args[0]
-            val category = ServerManager.getCategoryByName(categoryName)
-
-            if(!sender.hasPermission("maxjoiner.join.${categoryName}")) {
-                TLocale.sendTo(sender,"msg.no_permission")
+            if (!sender.hasPermission("maxjoiner.join.$arg")) {
+                sender.sendLang("no_permission")
             }
 
-            if(category == null) {
-                TLocale.sendTo(sender,"msg.null_category")
-                return
+            if (category == null) {
+                sender.sendLang("null_category")
+                return@execute
             }
 
             val pollServer = category.pollServer()
             if (pollServer == null) {
-                TLocale.sendTo(sender,"msg.none_server")
-                return
+                sender.sendLang("none_server")
+                return@execute
             }
 
             sender.connect(pollServer)
         }
     }
+}
 
-    @SubCommand(permission = "maxjoiner.gui", requiredPlayer = true, arguments = ["category"], description = "open the gui of a category")
-    val gui = object : BaseSubCommand() {
-        override fun getArguments(): Array<Argument> {
-            return arrayOf(Argument("category",true, CommandTab {
-                return@CommandTab ServerManager.categories.map { it.name }
-            }))
+fun CommandBuilder.CommandBase.commandGUI() = literal("gui", permission = "maxjoiner.gui") {
+    dynamic {
+        suggestion<Player> { _, _ ->
+            return@suggestion ServerManager.categories.map { it.name }
         }
 
-        override fun onCommand(sender: CommandSender, cmd: Command, lab: String, args: Array<out String>) {
-            sender as Player
-
-            val categoryName = args[0]
-            val category = ServerManager.getCategoryByName(categoryName)
-
-            if(!sender.hasPermission("maxjoiner.join.${categoryName}")) {
-                TLocale.sendTo(sender,"msg.no_permission")
+        execute<Player> { sender, _, arg ->
+            val category = ServerManager.getCategoryByName(arg)
+            if (!sender.hasPermission("maxjoiner.join.$arg")) {
+                sender.sendLang("msg.no_permission")
             }
 
-            if(category == null) {
-                TLocale.sendTo(sender,"msg.null_category")
-                return
-            }
-
-            category.openGui(sender)
-
+            category?.openGui(sender) ?: sender.sendLang("msg.null_category")
         }
     }
+}
 
-    @SubCommand(permission = "maxjoiner.list", description = "show all categories")
-    val list = object : BaseSubCommand() {
-        override fun onCommand(sender: CommandSender, cmd: Command, lab: String, args: Array<out String>) {
-            TLocale.sendTo(sender,"msg.list")
-            ServerManager.categories.forEach {
-                sender.sendMessage("§e${it.displayName}: §a${it.name}")
-            }
+fun CommandBuilder.CommandBase.commandList() = literal("list", permission = "maxjoiner.list") {
+    execute<Player> { sender, _, _ ->
+        sender.sendLang("list")
+        ServerManager.categories.forEach {
+            sender.sendMessage("§e${it.displayName}: §a${it.name}")
         }
     }
-
 }

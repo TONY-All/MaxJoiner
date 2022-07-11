@@ -1,4 +1,4 @@
-data class ComparableDC(val name: String, val id: Int): Comparable<ComparableDC> {
+data class ComparableDC(val name: String, val id: Int) : Comparable<ComparableDC> {
     override fun compareTo(other: ComparableDC): Int {
         return this.id - other.id
     }

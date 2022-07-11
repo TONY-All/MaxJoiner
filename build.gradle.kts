@@ -14,6 +14,7 @@ taboolib {
     install("common-5")
     install("platform-bukkit")
     install("module-configuration")
+    install("module-chat")
     install("module-lang")
     version = "6.0.9-25"
 //    options("skip-kotlin-relocate")

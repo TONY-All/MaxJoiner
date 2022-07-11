@@ -6,6 +6,8 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
+import taboolib.common.LifeCycle
+import taboolib.common.platform.SkipTo
 import taboolib.module.configuration.util.getStringColored
 import taboolib.platform.BukkitPlugin
 import taboolib.platform.util.ItemBuilder
@@ -30,6 +32,7 @@ data class ServerCategory(
         servers = CopyOnWriteArrayList(inputSer)
     }
 
+    @SkipTo(LifeCycle.ENABLE)
     companion object {
         val show = ItemBuilder(Material.valueOf(MaxJoiner.settings.getString("icons.show_all.type")!!)).apply {
             name = MaxJoiner.settings.getStringColored("icons.show_all.name")

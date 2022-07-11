@@ -7,15 +7,15 @@ categories:
     # regex supported
     joinable:
       - |-
-          State: [1-2]
-          Map: .*
+        State: [1-2]
+        Map: .*
     # which MOTD server can join
     # regex supported
     # empty means server can't spectate
     spectatable:
       - |-
-          State: [3-5]
-          Map: .*
+        State: [3-5]
+        Map: .*
     servers:
       # server name in bungeecord
       s1:

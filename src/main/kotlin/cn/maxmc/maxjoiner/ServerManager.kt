@@ -3,9 +3,9 @@ package cn.maxmc.maxjoiner
 import cn.maxmc.maxjoiner.server.Server
 import cn.maxmc.maxjoiner.server.ServerCategory
 import cn.maxmc.maxjoiner.server.ServerInfo
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.bukkit.Bukkit
+import taboolib.common.platform.function.info
 import taboolib.library.configuration.ConfigurationSection
 import taboolib.module.configuration.util.getStringColored
 import taboolib.platform.BukkitPlugin
@@ -17,8 +17,10 @@ object ServerManager {
 
     fun loadCategories() {
         categories.clear()
+        info("§a| §7正在加载类别.")
         val confSec = MaxJoiner.servers.getConfigurationSection("categories")!!
         confSec.getKeys(false).forEach {
+            info("§a| §7 Found $it")
             val category = loadCategory(confSec.getConfigurationSection(it)!!)
             categories.add(category)
             index[category.name] = category
@@ -52,7 +54,7 @@ object ServerManager {
             true,
             ip,
             port,
-            ServerInfo(false,0,0,""),
+            ServerInfo(false, 0, 0, ""),
             false
         )
     }
@@ -60,12 +62,12 @@ object ServerManager {
     fun updatePing() {
         categories.forEach {
             it.servers.forEach { server ->
-                GlobalScope.launch {
+                pluginScope.launch {
                     val serverInfo = ping(server.url, server.port)
                     server.currentState = serverInfo
                     var temp = false
                     for (joinStr in it.joinable) {
-                        if(joinStr == serverInfo.lore || server.currentState.lore.matches(Regex(joinStr))) {
+                        if (joinStr == serverInfo.lore || server.currentState.lore.matches(Regex(joinStr))) {
                             temp = true
                             break
                         }
@@ -73,7 +75,7 @@ object ServerManager {
                     server.canJoin = temp
                     temp = false
                     for (patten in it.spectatable) {
-                        if(patten == server.currentState.lore || server.currentState.lore.matches(Regex(patten))) {
+                        if (patten == server.currentState.lore || server.currentState.lore.matches(Regex(patten))) {
                             temp = true
                             break
                         }
