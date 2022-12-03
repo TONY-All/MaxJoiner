@@ -2,12 +2,12 @@ package cn.maxmc.maxjoiner.server
 
 import cn.maxmc.maxjoiner.MaxJoiner
 import org.bukkit.Bukkit
-import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import taboolib.common.LifeCycle
 import taboolib.common.platform.SkipTo
+import taboolib.library.xseries.XMaterial
 import taboolib.module.configuration.util.getStringColored
 import taboolib.platform.BukkitPlugin
 import taboolib.platform.util.ItemBuilder
@@ -34,7 +34,7 @@ data class ServerCategory(
 
     @SkipTo(LifeCycle.ENABLE)
     companion object {
-        val show = ItemBuilder(Material.valueOf(MaxJoiner.settings.getString("icons.show_all.type")!!)).apply {
+        val show = ItemBuilder(XMaterial.valueOf(MaxJoiner.settings.getString("icons.show_all.type")!!)).apply {
             name = MaxJoiner.settings.getStringColored("icons.show_all.name")
             damage = MaxJoiner.settings.getInt("icons.show_all.damage")
             lore.addAll(MaxJoiner.settings.getStringColored("icons.show_all.lore")!!.lines())
@@ -43,7 +43,7 @@ data class ServerCategory(
             }
         }
 
-        val join = ItemBuilder(Material.valueOf(MaxJoiner.settings.getString("icons.fast_join.type")!!)).apply {
+        val join = ItemBuilder(XMaterial.valueOf(MaxJoiner.settings.getString("icons.fast_join.type")!!)).apply {
             name = MaxJoiner.settings.getStringColored("icons.fast_join.name")!!
             damage = MaxJoiner.settings.getInt("icons.fast_join.damage")
             lore.addAll(MaxJoiner.settings.getStringColored("icons.fast_join.lore")!!.lines())
@@ -52,7 +52,7 @@ data class ServerCategory(
             }
         }
 
-        val back = ItemBuilder(Material.valueOf(MaxJoiner.settings.getString("icons.back.type")!!)).apply {
+        val back = ItemBuilder(XMaterial.valueOf(MaxJoiner.settings.getString("icons.back.type")!!)).apply {
             name = MaxJoiner.settings.getStringColored("icons.back.name")
             damage = MaxJoiner.settings.getInt("icons.back.damage")
             lore.addAll(MaxJoiner.settings.getStringColored("icons.back.lore")!!.lines())
@@ -190,7 +190,7 @@ data class ServerCategory(
 
         // Offline
         if (!server.currentState.isOnline) {
-            val builder = ItemBuilder(Material.valueOf(MaxJoiner.settings.getString("icons.closed.type")!!)).apply {
+            val builder = ItemBuilder(XMaterial.valueOf(MaxJoiner.settings.getString("icons.closed.type")!!)).apply {
                 name = MaxJoiner.settings.getStringColored("icons.closed.name")!!.replace("%name%", server.name)
                 damage = MaxJoiner.settings.getInt("icons.closed.damage")
                 lore.addAll(MaxJoiner.settings.getString("icons.closed.lore")!!.lines())
@@ -210,7 +210,7 @@ data class ServerCategory(
             // Unjoinable
             if (!server.canSpectate) {
                 val builder =
-                    ItemBuilder(Material.valueOf(MaxJoiner.settings.getString("icons.unjoinable.type")!!)).apply {
+                    ItemBuilder(XMaterial.valueOf(MaxJoiner.settings.getString("icons.unjoinable.type")!!)).apply {
                         name = MaxJoiner.settings.getStringColored("icons.unjoinable.name")!!
                             .replace("%name%", server.name)
                         damage = MaxJoiner.settings.getInt("icons.unjoinable.damage")
@@ -230,7 +230,7 @@ data class ServerCategory(
             // Can spectate
             let {
                 val builder =
-                    ItemBuilder(Material.valueOf(MaxJoiner.settings.getString("icons.spectateble.type")!!)).apply {
+                    ItemBuilder(XMaterial.valueOf(MaxJoiner.settings.getString("icons.spectateble.type")!!)).apply {
                         damage = MaxJoiner.settings.getInt("icons.spectateble.damage")
                         name = MaxJoiner.settings.getStringColored("icons.spectateble.name")!!
                             .replace("%name%", server.name)
@@ -249,7 +249,7 @@ data class ServerCategory(
         }
 
         // Joinable
-        val builder = ItemBuilder(Material.valueOf(MaxJoiner.settings.getString("icons.joinable.type")!!)).apply {
+        val builder = ItemBuilder(XMaterial.valueOf(MaxJoiner.settings.getString("icons.joinable.type")!!)).apply {
             name = MaxJoiner.settings.getStringColored("icons.joinable.name")!!.replace("%name%", server.name)
             damage = MaxJoiner.settings.getInt("icons.joinable.damage")
             lore.addAll(
