@@ -1,8 +1,8 @@
 package cn.maxmc.maxjoiner
 
 import org.bukkit.entity.Player
-import taboolib.common.platform.command.CommandBuilder
 import taboolib.common.platform.command.command
+import taboolib.common.platform.command.component.CommandBase
 import taboolib.platform.util.sendLang
 
 fun registerCommand() {
@@ -13,7 +13,7 @@ fun registerCommand() {
     }
 }
 
-fun CommandBuilder.CommandBase.commandQuick() = literal("quick", permission = "maxjoiner.quick") {
+fun CommandBase.commandQuick() = literal("quick", permission = "maxjoiner.quick") {
     dynamic {
         suggestion<Player> { _, _ ->
             ServerManager.categories.map { it.name }
@@ -42,7 +42,7 @@ fun CommandBuilder.CommandBase.commandQuick() = literal("quick", permission = "m
     }
 }
 
-fun CommandBuilder.CommandBase.commandGUI() = literal("gui", permission = "maxjoiner.gui") {
+fun CommandBase.commandGUI() = literal("gui", permission = "maxjoiner.gui") {
     dynamic {
         suggestion<Player> { _, _ ->
             return@suggestion ServerManager.categories.map { it.name }
@@ -59,7 +59,7 @@ fun CommandBuilder.CommandBase.commandGUI() = literal("gui", permission = "maxjo
     }
 }
 
-fun CommandBuilder.CommandBase.commandList() = literal("list", permission = "maxjoiner.list") {
+fun CommandBase.commandList() = literal("list", permission = "maxjoiner.list") {
     execute<Player> { sender, _, _ ->
         sender.sendLang("list")
         ServerManager.categories.forEach {

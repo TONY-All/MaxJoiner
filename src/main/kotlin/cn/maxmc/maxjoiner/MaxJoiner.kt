@@ -9,7 +9,7 @@ import taboolib.platform.BukkitPlugin
 import java.util.*
 
 @RuntimeDependency(
-    "!org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.1",
+    "!org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.7.0-Beta",
     test = "kotlinx.coroutines.Job",
     relocate = ["!kotlin.", "!kotlin@kotlin_version_escape@."]
 )

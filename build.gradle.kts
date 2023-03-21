@@ -1,6 +1,6 @@
 plugins {
-    id("io.izzel.taboolib") version "1.50"
-    id("org.jetbrains.kotlin.jvm") version "1.7.10"
+    id("io.izzel.taboolib") version "1.56"
+    id("org.jetbrains.kotlin.jvm") version "1.8.10"
 }
 
 group = "cn.maxmc.maxjoiner"
@@ -16,7 +16,7 @@ taboolib {
     install("module-configuration")
     install("module-chat")
     install("module-lang")
-    version = "6.0.10-22"
+    version = "6.0.10-98"
 //    options("skip-kotlin-relocate")
     classifier = null
     description {
@@ -38,7 +38,7 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0-Beta")
     implementation(kotlin("stdlib"))
     compileOnly("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT")
     compileOnly("ink.ptms:nms-all:1.0.0")
