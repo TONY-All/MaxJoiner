@@ -1,5 +1,6 @@
 package cn.maxmc.maxjoiner
 
+import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import taboolib.common.platform.command.command
 import taboolib.common.platform.command.component.CommandBase
@@ -10,6 +11,7 @@ fun registerCommand() {
         commandQuick()
         commandGUI()
         commandList()
+        commandReload()
     }
 }
 
@@ -65,5 +67,11 @@ fun CommandBase.commandList() = literal("list", permission = "maxjoiner.list") {
         ServerManager.categories.forEach {
             sender.sendMessage("§e${it.displayName}: §a${it.name}")
         }
+    }
+}
+
+fun CommandBase.commandReload() = literal("reload", permission = "maxjoiner.reload") {
+    execute<CommandSender> { _, _, _ ->
+        MaxJoiner.servers.reload()
     }
 }

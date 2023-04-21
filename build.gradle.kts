@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "cn.maxmc.maxjoiner"
-version = "1.3.3"
+version = "1.3.4"
 
 //sourceCompatibility = "1.8"
 //targetCompatibility = "1.8"
