@@ -1,10 +1,10 @@
 plugins {
     id("io.izzel.taboolib") version "1.56"
-    id("org.jetbrains.kotlin.jvm") version "1.8.10"
+    id("org.jetbrains.kotlin.jvm") version "1.8.20"
 }
 
 group = "cn.maxmc.maxjoiner"
-version = "1.3.0"
+version = "1.3.3"
 
 //sourceCompatibility = "1.8"
 //targetCompatibility = "1.8"
@@ -16,7 +16,7 @@ taboolib {
     install("module-configuration")
     install("module-chat")
     install("module-lang")
-    version = "6.0.10-98"
+    version = "6.0.10-114"
 //    options("skip-kotlin-relocate")
     classifier = null
     description {

@@ -1,9 +1,10 @@
 package cn.maxmc.maxjoiner
 
 import org.bukkit.entity.Player
+import taboolib.library.xseries.XMaterial
 import taboolib.platform.compat.PlaceholderExpansion
 
-class PAPIHook : PlaceholderExpansion {
+object PAPIHook : PlaceholderExpansion {
     override val identifier: String = "maxjoiner"
 
     override fun onPlaceholderRequest(player: Player?, args: String): String {

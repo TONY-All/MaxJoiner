@@ -28,7 +28,7 @@ icons:
     shiny: false
   unjoinable:
     name: "§c%name%"
-    type: "WOOL"
+    type: "WHITE_WOOL"
     damage: 14
     lore: |-
       §aCurrent Player: %player%
@@ -45,19 +45,19 @@ icons:
 
   show_all:
     name: "§6Show All"
-    type: "EYE_OF_ENDER"
+    type: "ENDER_EYE"
     damage: 0
     lore: ""
     shiny: false
   fast_join:
     name: "§aQuick join"
-    type: "REDSTONE_TORCH_ON"
+    type: "REDSTONE_TORCH"
     damage: 0
     lore: ""
     shiny: false
   back:
     name: "§eBack"
-    type: "BED"
+    type: "WHITE_BED"
     damage: 0
     lore: ""
     shiny: false

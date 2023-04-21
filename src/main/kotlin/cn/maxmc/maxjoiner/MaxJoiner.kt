@@ -24,6 +24,7 @@ object MaxJoiner : Plugin() {
 
     override fun onEnable() {
         registerCommand()
+        debugCmd()
         Bukkit.getServer().messenger.registerOutgoingPluginChannel(BukkitPlugin.getInstance(), "BungeeCord")
         timer.schedule(object : TimerTask() {
             override fun run() {

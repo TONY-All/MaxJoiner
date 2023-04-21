@@ -7,7 +7,6 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import kotlinx.coroutines.*
 import net.md_5.bungee.chat.ComponentSerializer
-import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.entity.Player
 import taboolib.common.platform.function.warning
 import taboolib.platform.BukkitPlugin
@@ -19,16 +18,17 @@ import java.net.InetSocketAddress
 import java.net.Socket
 import java.nio.charset.StandardCharsets
 import kotlin.experimental.and
+import kotlin.time.ExperimentalTime
 
-val timeout: Int
-    get() = MaxJoiner.settings.getInt("timeout")
+val timeout: Long
+    get() = MaxJoiner.settings.getLong("timeout")
 
-@Suppress("BlockingMethodInNonBlockingContext")
-suspend fun ping(url: String, port: Int): ServerInfo {
-    return withContext(Dispatchers.IO) {
+@OptIn(ExperimentalTime::class)
+suspend fun ping(url: String, port: Int): ServerInfo = withTimeout(timeout) {
+    withContext(Dispatchers.IO) {
         val socket = Socket()
         try {
-            socket.connect(InetSocketAddress(url, port), timeout)
+            socket.connect(InetSocketAddress(url, port))
         } catch (e: Exception) {
             return@withContext ServerInfo(false, 0, 0, "")
         }
@@ -38,33 +38,33 @@ suspend fun ping(url: String, port: Int): ServerInfo {
         val dataOutputStream = DataOutputStream(outputStream)
         val bs = ByteArrayOutputStream()
         val out = DataOutputStream(bs)
+
         // Send Handshake
-        let {
-            out.write(0)
-            writeVarInt(out, 4)
-            writeString(out, url)
-            out.writeShort(port)
-            writeVarInt(out, 1)
-            sendPacket(dataOutputStream, bs.toByteArray())
-        }
+        out.write(0)
+        writeVarInt(out, 4)
+        writeString(out, url)
+        out.writeShort(port)
+        writeVarInt(out, 1)
+        sendPacket(dataOutputStream, bs.toByteArray())
+
         // Query
-        val result = let {
+        val result = runCatching {
             sendPacket(dataOutputStream, ByteArray(1))
             readVarInt(dataInputStream)
             val packetId: Int = readVarInt(dataInputStream)
-            return@let if (packetId != 0) {
+            if (packetId != 0) {
                 throw IOException("Invalid packetId")
-            } else {
-                val stringLength: Int = readVarInt(dataInputStream)
-                if (stringLength < 1) {
-                    throw IOException("Invalid string length.")
-                } else {
-                    val responseData = ByteArray(stringLength)
-                    dataInputStream.readFully(responseData)
-                    val jsonString = String(responseData, StandardCharsets.UTF_8)
-                    jsonString
-                }
             }
+            val stringLength: Int = readVarInt(dataInputStream)
+            if (stringLength < 1) {
+                throw IOException("Invalid string length.")
+            }
+            val responseData = ByteArray(stringLength)
+            dataInputStream.readFully(responseData)
+            responseData.decodeToString()
+        }.getOrElse {
+            println("§c| §7 Error while contacting server: ${url}:$port")
+            return@withContext ServerInfo(false, 0, 0, "")
         }
 
         try {
@@ -82,10 +82,10 @@ suspend fun ping(url: String, port: Int): ServerInfo {
                 }
                 it.asString
             }
-            ServerInfo(true, online, max, description)
+            return@withContext ServerInfo(true, online, max, description)
         } catch (e: Throwable) {
             warning("§c| §7Error while parse Json Object: \n $result")
-            ServerInfo(false, 0, 0, "")
+            return@withContext ServerInfo(false, 0, 0, "")
         }
     }
 }
@@ -122,10 +122,6 @@ private fun writeVarInt(out: DataOutputStream, paramInt: Int) {
 private fun writeString(out: DataOutputStream, string: String) {
     writeVarInt(out, string.length)
     out.write(string.toByteArray(StandardCharsets.UTF_8))
-}
-
-fun ConfigurationSection.getStringColored(path: String): String {
-    return this.getString(path).replace('&', '§')
 }
 
 @Suppress("UnstableApiUsage")
